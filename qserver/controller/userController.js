@@ -58,3 +58,33 @@ export const login = async (req, res, next) => {
     }
 }
 
+// Google Registration 
+export const googleReg = async (req, res, next) => {
+    const { email, name, profileImgURL} = req.body
+
+    try {
+        const validUser = await User.findOne({email})
+        if(validUser){
+            const token = jwt.sign({userId:validUser._id}, process.env.JWT_SECRET)
+            const {password:pass,...rest} = validUser._doc
+            res.status(200).cookie('auth_token', token, {httpOnly: true}).json(rest)
+        }
+        else{
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
+            const newUser = new User({
+                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
+                email,
+                password: hashedPassword,
+                profilePicture: profileImgURL,
+            });
+            await newUser.save()
+            const token = jwt.sign({userId:newUser._id}, process.env.JWT_SECRET)
+            const {password:pass,...rest} = newUser._doc
+            res.status(200).cookie('auth_token', token, {httpOnly: true}).json(rest)
+        }
+    } catch (error) {
+        
+    }
+}
