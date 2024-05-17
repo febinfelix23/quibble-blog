@@ -11,7 +11,8 @@ import {
   updateFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  deleteUserFailure,
+  logoutSuccess
 } from '../redux/user/userSlice'
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -119,6 +120,23 @@ function DashProfile() {
     }
   }
 
+  // Logout function and API
+  const handleLogout = async () => {
+    try {
+      const result = await fetch('/qserver/user/logout', {
+        method: 'POST',
+      })
+      const resultData = await result.json()
+      if (result.status === 200) {
+        dispatch(logoutSuccess())
+      } else {
+        console.log(resultData.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   // Delete user function and API
   const handleDeleteUser = async () => {
     try {
@@ -127,9 +145,9 @@ function DashProfile() {
         method: 'DELETE',
       });
       const resultData = await result.json()
-      if(result.status === 200){
+      if (result.status === 200) {
         dispatch(deleteUserSuccess(resultData))
-      }else{
+      } else {
         dispatch(deleteUserFailure(resultData.message))
       }
     } catch (error) {
@@ -188,7 +206,7 @@ function DashProfile() {
 
       <div className="flex justify-between text-red-500 mt-5">
         <span className='cursor-pointer' onClick={() => setOpenModal(true)}>Delete account</span>
-        <span className='cursor-pointer'>Sign Out</span>
+        <span className='cursor-pointer' onClick={handleLogout}>Sign Out</span>
       </div>
 
       {
