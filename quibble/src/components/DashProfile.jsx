@@ -1,16 +1,24 @@
-import { Alert, Button, TextInput } from 'flowbite-react'
+import { Alert, Button, Modal, TextInput } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateStart, updateSuccess, updateFailure } from '../redux/user/userSlice'
+import {
+  updateStart,
+  updateSuccess,
+  updateFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure
+} from '../redux/user/userSlice'
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 function DashProfile() {
 
   // Initialization
-  const { currentUser } = useSelector(state => state.user)
+  const { currentUser, error } = useSelector(state => state.user)
   const [imageFile, setImageFile] = useState(null)
   const [imageFileURL, setImageFileURL] = useState(null)
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null)
@@ -19,6 +27,7 @@ function DashProfile() {
   const [imageUploading, setImageUploading] = useState(false)
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null)
   const [updateUserError, setUpdateUserError] = useState(null)
+  const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch()
   const filePickerRef = useRef()
 
@@ -77,12 +86,12 @@ function DashProfile() {
     setUpdateUserSuccess(null)
     if (Object.keys(formData).length === 0) {
       setUpdateUserError('No changes were made')
-      setTimeout(()=>{
+      setTimeout(() => {
         setUpdateUserError(null)
-      },2000)
+      }, 2000)
       return;
     }
-    if(imageUploading){
+    if (imageUploading) {
       setUpdateUserError('Please wait for image to uploaded')
       return;
     }
@@ -95,19 +104,38 @@ function DashProfile() {
       });
       const resultData = await result.json()
 
-      if(result.status === 200){
+      if (result.status === 200) {
         dispatch(updateSuccess(resultData))
         setUpdateUserSuccess("User details updated successfully!")
-        setTimeout(()=>{
+        setTimeout(() => {
           setUpdateUserSuccess(null)
-        },2000)
-      }else{
+        }, 2000)
+      } else {
         dispatch(updateFailure(resultData.message))
         setUpdateUserError(resultData.message)
       }
     } catch (error) {
       dispatch(updateFailure(error.message))
     }
+  }
+
+  // Delete user function and API
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart())
+      const result = await fetch(`/qserver/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const resultData = await result.json()
+      if(result.status === 200){
+        dispatch(deleteUserSuccess(resultData))
+      }else{
+        dispatch(deleteUserFailure(resultData.message))
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+    }
+    setOpenModal(false)
   }
 
   // Use Effects
@@ -159,8 +187,8 @@ function DashProfile() {
       </form>
 
       <div className="flex justify-between text-red-500 mt-5">
-        <span>Delete account</span>
-        <span>Sign Out</span>
+        <span className='cursor-pointer' onClick={() => setOpenModal(true)}>Delete account</span>
+        <span className='cursor-pointer'>Sign Out</span>
       </div>
 
       {
@@ -177,6 +205,33 @@ function DashProfile() {
           </Alert>
         )
       }
+      {
+        error && (
+          <Alert color='failure' className='mt-5'>
+            {error}
+          </Alert>
+        )
+      }
+
+      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+        <Modal.Header />
+        <Modal.Body className='dark:bg-gray-400'>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this product?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteUser}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button color="gray" onClick={() => setOpenModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }
