@@ -1,5 +1,6 @@
 import express from 'express'
-import { googleReg, login, register, test } from '../controller/userController.js';
+import { googleReg, login, register, test, updateUser } from '../controller/userController.js';
+import { verifyToken } from '../middleware/verifyUser.js';
 
 // Init router
 const router = express.Router();
@@ -15,5 +16,8 @@ router.post('/user/google', googleReg)
 
 // Login 
 router.post('/user/login', login)
+
+// Update user details
+router.put('/user/update/:id', verifyToken, updateUser)
 
 export default router;
