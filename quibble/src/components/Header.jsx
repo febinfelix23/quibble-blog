@@ -48,7 +48,7 @@ function Header() {
                 <Dropdown.Item className='font-semibold'>Profile</Dropdown.Item>
               </Link>
               <Dropdown.Divider />
-              <Dropdown.Item className='font-semibold'>Sign Out</Dropdown.Item>
+              <Dropdown.Item className='font-semibold'>Signout</Dropdown.Item>
             </Dropdown>
           ) : (
             <Link to='/login'>
