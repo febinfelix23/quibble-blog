@@ -9,6 +9,7 @@ import {
     updateUser
 } from '../controller/userController.js';
 import { verifyToken } from '../middleware/verifyUser.js';
+import { createPost } from '../controller/postController.js';
 
 // Init router
 const router = express.Router();
@@ -33,5 +34,8 @@ router.post('/user/logout', logout)
 
 // Delete user 
 router.delete('/user/delete/:id', verifyToken, deleteUser)
+
+// Create blog post
+router.post('/post/create', verifyToken, createPost)
 
 export default router;
