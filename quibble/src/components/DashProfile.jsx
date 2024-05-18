@@ -1,10 +1,11 @@
-import { Alert, Button, Modal, TextInput } from 'flowbite-react'
+import { Alert, Button, Modal, Spinner, TextInput } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Link } from 'react-router-dom'
 import {
   updateStart,
   updateSuccess,
@@ -19,7 +20,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 function DashProfile() {
 
   // Initialization
-  const { currentUser, error } = useSelector(state => state.user)
+  const { currentUser, error, loading } = useSelector(state => state.user)
   const [imageFile, setImageFile] = useState(null)
   const [imageFileURL, setImageFileURL] = useState(null)
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null)
@@ -199,9 +200,23 @@ function DashProfile() {
 
         <TextInput type='password' id='password' placeholder='Password' onChange={handleChange} />
 
-        <Button type='submit' gradientDuoTone='purpleToPink' disabled={imageUploading}>
-          Update
+        <Button type='submit' gradientDuoTone='purpleToPink' disabled={loading || imageUploading}>
+          {loading || imageUploading ?
+            <>
+              <Spinner size='sm' />
+              <span className='pl-3'>Updating....</span>
+            </> : 'Update'}
         </Button>
+
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-posts'}>
+              <Button gradientDuoTone='greenToBlue' className='text-white w-full'  outline>
+                Create a post
+              </Button>
+            </Link>
+          )
+        }
       </form>
 
       <div className="flex justify-between text-red-500 mt-5">
