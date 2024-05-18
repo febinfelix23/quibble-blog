@@ -9,7 +9,7 @@ import {
     updateUser
 } from '../controller/userController.js';
 import { verifyToken } from '../middleware/verifyUser.js';
-import { createPost, deletePost, getPosts, } from '../controller/postController.js';
+import { createPost, deletePost, getPosts, updatePost, } from '../controller/postController.js';
 
 // Init router
 const router = express.Router();
@@ -43,5 +43,8 @@ router.get('/post/getposts', getPosts)
 
 // Delete post
 router.delete('/post/delete/:postId/:userId', verifyToken, deletePost)
+
+// Update post
+router.put('/post/update/:postId/:userId', verifyToken, updatePost)
 
 export default router;
