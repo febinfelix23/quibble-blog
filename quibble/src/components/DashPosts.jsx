@@ -1,26 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Table } from 'flowbite-react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function DashPosts() {
 
   const { currentUser } = useSelector(state => state.user);
   const [userPosts, setUserPosts] = useState([])
-  console.log(userPosts);
+  const [showMore, setShowMore] = useState(true)
 
+  // Fetch posts function and API
   const fetchPosts = async () => {
     try {
       const result = await fetch(`/qserver/post/getposts?userId=${currentUser._id}`)
       const resultData = await result.json();
       if (result.ok) {
         setUserPosts(resultData.posts)
+        if (resultData.posts.length < 9) {
+          setShowMore(false);
+        }
       }
 
     } catch (error) {
       console.log(error);
     }
   }
+
+  // Fetch more posts function and API
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+    try {
+      const result = await fetch(`/qserver/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`)
+      const resultData = await result.json()
+
+      if (result.ok) {
+        setUserPosts((prev) => [...prev, ...resultData.posts])
+        if (resultData.posts.length < 9) {
+          setShowMore(false)
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Use Effects
   useEffect(() => {
     if (currentUser.isAdmin) {
       fetchPosts()
@@ -44,7 +68,7 @@ function DashPosts() {
                 </Table.HeadCell>
               </Table.Head>
 
-              {userPosts.map((posts)=>(
+              {userPosts.map((posts) => (
                 <Table.Body className='divide-y'>
                   <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                     <Table.Cell>{new Date(posts.updatedAt).toLocaleDateString()}</Table.Cell>
@@ -63,6 +87,12 @@ function DashPosts() {
                 </Table.Body>
               ))}
             </Table>
+
+            {
+              showMore && (
+                <button onClick={handleShowMore} className='w-full text-teal-500 self-center text-sm py-7'>Show More</button>
+              )
+            }
           </>
         ) : (
           <p>You have no posts yet.</p>
