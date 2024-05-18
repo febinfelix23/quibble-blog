@@ -48,7 +48,7 @@ export const login = async (req, res, next) => {
                 return next(errorHandler(403, 'Invalid username/password'))
             }
 
-            const token = jwt.sign({ userId: validUser._id }, process.env.JWT_SECRET)
+            const token = jwt.sign({ userId: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET)
             const { password: pass, ...rest } = validUser._doc
             res.status(200).cookie('auth_token', token, { httpOnly: true }).json(rest)
 
@@ -65,7 +65,7 @@ export const googleReg = async (req, res, next) => {
     try {
         const validUser = await User.findOne({ email })
         if (validUser) {
-            const token = jwt.sign({ userId: validUser._id }, process.env.JWT_SECRET)
+            const token = jwt.sign({ userId: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET)
             const { password: pass, ...rest } = validUser._doc
             res.status(200).cookie('auth_token', token, { httpOnly: true }).json(rest)
         }
@@ -80,7 +80,7 @@ export const googleReg = async (req, res, next) => {
                 profilePicture: profileImgURL,
             });
             await newUser.save()
-            const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET)
+            const token = jwt.sign({ userId: newUser._id, newUser: validUser.isAdmin }, process.env.JWT_SECRET)
             const { password: pass, ...rest } = newUser._doc
             res.status(200).cookie('auth_token', token, { httpOnly: true }).json(rest)
         }
