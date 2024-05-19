@@ -17,6 +17,7 @@ function UpdatePost() {
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({})
+  console.log(formData);
   const [publishError, setPublishError] = useState(null)
   const navigate = useNavigate()
   const { postId } = useParams()
@@ -65,6 +66,8 @@ function UpdatePost() {
   const handleUpdatePost = async (e) => {
     e.preventDefault();
     try {
+      console.log(formData._id);
+      console.log(currentUser._id);
       const result = await fetch(`/qserver/post/update/${formData._id}/${currentUser._id}`, {
         method: 'PUT',
         headers: { "Content-Type": "application/json" },
