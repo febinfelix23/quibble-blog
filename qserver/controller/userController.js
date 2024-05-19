@@ -144,7 +144,7 @@ export const logout = (req, res, next) => {
 
 // Delete user
 export const deleteUser = async (req, res, next) => {
-    if (req.user.userId !== req.params.id) {
+    if (!req.user.isAdmin && req.user.userId !== req.params.id) {
         return next(errorHandler(403, 'You are not allowed to delete this user!'))
     }
     try {

@@ -30,7 +30,7 @@ function DashUsers() {
         }
     }
 
-    // Fetch more posts function and API
+    // Fetch more users function and API
     const handleShowMore = async () => {
         const startIndex = users.length;
         try {
@@ -48,16 +48,16 @@ function DashUsers() {
         }
     }
 
-    // Delete post function and API
+    // Delete user function and API
     const handleDeleteUser = async () => {
-        setOpenModal(false);
         try {
-            const result = await fetch(`/qserver/user/delete/${userIdToDelete}/${currentUser._id}`, {
+            const result = await fetch(`/qserver/user/delete/${userIdToDelete}`, {
                 method: 'DELETE',
             })
             const resultData = await result.json()
             if (result.ok) {
                 setUsers((prev) => prev.filter((post) => post._id !== userIdToDelete));
+                setOpenModal(false)
             } else {
                 console.log(resultData.message);
             }
@@ -95,7 +95,7 @@ function DashUsers() {
                                         <Table.Cell><img src={user.profilePicture} alt={user.username} className='w-20 h-20 object-cover bg-gray-500 rounded-full' /></Table.Cell>
                                         <Table.Cell>{user.username}</Table.Cell>
                                         <Table.Cell>{user.email}</Table.Cell>
-                                        <Table.Cell>{user.isAdmin ? (<FaCheck className='text-green-500'/>) : (<FaTimes className='text-red-500'/>)}</Table.Cell>
+                                        <Table.Cell>{user.isAdmin ? (<FaCheck className='text-green-500' />) : (<FaTimes className='text-red-500' />)}</Table.Cell>
                                         <Table.Cell>
                                             <span className='font-medium text-red-500 hover:underline cursor-pointer' onClick={() => { setOpenModal(true); setUserIdToDelete(user._id) }}> Delete</span>
                                         </Table.Cell>
