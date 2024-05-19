@@ -1,6 +1,7 @@
 import express from 'express'
 import {
     deleteUser,
+    getAllUsers,
     googleReg,
     login,
     logout,
@@ -34,6 +35,9 @@ router.post('/user/logout', logout)
 
 // Delete user 
 router.delete('/user/delete/:id', verifyToken, deleteUser)
+
+// Get all users
+router.get('/user/getusers', verifyToken, getAllUsers)
 
 // Create blog post
 router.post('/post/create', verifyToken, createPost)
