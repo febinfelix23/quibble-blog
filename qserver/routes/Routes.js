@@ -11,6 +11,7 @@ import {
 } from '../controller/userController.js';
 import { verifyToken } from '../middleware/verifyUser.js';
 import { createPost, deletePost, getPosts, updatePost, } from '../controller/postController.js';
+import { createComment } from '../controller/commentController.js';
 
 // Init router
 const router = express.Router();
@@ -50,5 +51,8 @@ router.delete('/post/delete/:postId/:userId', verifyToken, deletePost)
 
 // Update post
 router.put('/post/update/:postId/:userId', verifyToken, updatePost)
+
+// Comment router
+router.post('/post/comment', verifyToken, createComment)
 
 export default router;
