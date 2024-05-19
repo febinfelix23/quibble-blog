@@ -93,7 +93,7 @@ function DashPosts() {
                 <Table.Body key={index} className='divide-y'>
                   <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                     <Table.Cell>{new Date(posts.updatedAt).toLocaleDateString()}</Table.Cell>
-                    <Table.Cell><Link to={`/post/${posts.slug}`}><img src={posts.image} alt={posts.title} className='w-56 h-20 object-cover bg-gray-500' /></Link></Table.Cell>
+                    <Table.Cell><Link to={`/post/${posts.slug}`}><img src={posts.image} alt={posts.title} className='w-40 object-cover bg-gray-500' /></Link></Table.Cell>
                     <Table.Cell><Link className='font-semibold text-gray-900 dark:text-white' to={`/post/${posts.slug}`}>{posts.title}</Link></Table.Cell>
                     <Table.Cell>{posts.category}</Table.Cell>
                     <Table.Cell>
