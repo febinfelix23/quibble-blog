@@ -1,12 +1,14 @@
 import { Alert, Button, Textarea } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Comment from './Comment'
 
 function CommentSection({ postId }) {
 
   const { currentUser } = useSelector(state => state.user)
   const [comment, setComment] = useState('')
+  const [comments, setComments] = useState([])
   const [commentError, setCommentError] = useState(null)
 
   const handleSubmit = async (e) => {
@@ -24,11 +26,28 @@ function CommentSection({ postId }) {
       if (result.ok) {
         setComment('');
         setCommentError(null)
+        setComments([resultDate, ...comments]);
       }
     } catch (error) {
       setCommentError(error.message)
     }
   }
+
+
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const result = await fetch(`/qserver/getComment/${postId}`);
+        if (result.ok) {
+          const resultData = await result.json();
+          setComments(resultData)
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    getComments()
+  }, [postId])
 
   return (
     <div className='max-w-2xl mx-auto w-full p-3'>
@@ -53,7 +72,7 @@ function CommentSection({ postId }) {
 
       {
         currentUser &&
-        <form className='border border-teal-500 rounded-md p-3' onSubmit={handleSubmit}>
+        (<form className='border border-teal-500 rounded-md p-3' onSubmit={handleSubmit}>
           <Textarea placeholder='Add a comment...' rows='3' maxLength='200' onChange={(e) => setComment(e.target.value)} value={comment} />
           <div className="flex justify-between items-center mt-5">
             <p className='text-xs text-gray-500'>{200 - comment.length} characters remaining</p>
@@ -63,10 +82,33 @@ function CommentSection({ postId }) {
           </div>
 
           {
-            commentError && 
+            commentError &&
             <Alert color={'failure'} className='mt-5'>{commentError}</Alert>
           }
-        </form>
+        </form>)
+      }
+
+      {
+        comments.length === 0 ? (
+          <p className='text-sm my-5'>
+            No comments yet.
+          </p>
+        ) : (
+          <>
+            <div className="text-sm my-5 flex items-center gap-1">
+              <p>Comments</p>
+              <div className="border border-gray-400 px-2 rounded-sm">
+                <p>{comments.length}</p>
+              </div>
+            </div>
+
+            {
+              comments.map((comment) => (
+                <Comment key={comment._id} comment={comment} />
+              ))
+            }
+          </>
+        )
       }
     </div>
   )

@@ -1,6 +1,7 @@
 import express from 'express'
 import {
     deleteUser,
+    getAUser,
     getAllUsers,
     googleReg,
     login,
@@ -11,7 +12,7 @@ import {
 } from '../controller/userController.js';
 import { verifyToken } from '../middleware/verifyUser.js';
 import { createPost, deletePost, getPosts, updatePost, } from '../controller/postController.js';
-import { createComment } from '../controller/commentController.js';
+import { createComment, getComments } from '../controller/commentController.js';
 
 // Init router
 const router = express.Router();
@@ -40,6 +41,9 @@ router.delete('/user/delete/:id', verifyToken, deleteUser)
 // Get all users
 router.get('/user/getusers', verifyToken, getAllUsers)
 
+// Get a user
+router.get('/user/:userId', getAUser)
+
 // Create blog post
 router.post('/post/create', verifyToken, createPost)
 
@@ -54,5 +58,8 @@ router.put('/post/update/:postId/:userId', verifyToken, updatePost)
 
 // Post comment
 router.post('/post/comment', verifyToken, createComment)
+
+// Get comments
+router.get('/getComment/:postId', getComments)
 
 export default router;
