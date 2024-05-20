@@ -52,7 +52,7 @@ router.delete('/post/delete/:postId/:userId', verifyToken, deletePost)
 // Update post
 router.put('/post/update/:postId/:userId', verifyToken, updatePost)
 
-// Comment router
+// Post comment
 router.post('/post/comment', verifyToken, createComment)
 
 export default router;

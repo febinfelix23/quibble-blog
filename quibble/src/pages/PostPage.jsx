@@ -22,6 +22,7 @@ function PostPage() {
             } else {
                 setError(true)
                 setLoading(false)
+                console.log(error);
                 return
             }
         } catch (error) {
@@ -57,7 +58,7 @@ function PostPage() {
             </div>
 
             <div className='p-2 max-w-5xl mx-auto w-full mt-5 post-content' dangerouslySetInnerHTML={{__html: post && post.content}}></div>
-
+            
             <CommentSection postId={post._id}/>
         </main>
     )
