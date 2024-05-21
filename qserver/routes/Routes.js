@@ -12,7 +12,7 @@ import {
 } from '../controller/userController.js';
 import { verifyToken } from '../middleware/verifyUser.js';
 import { createPost, deletePost, getPosts, updatePost, } from '../controller/postController.js';
-import { createComment, getComments } from '../controller/commentController.js';
+import { createComment, getComments, likeComment } from '../controller/commentController.js';
 
 // Init router
 const router = express.Router();
@@ -61,5 +61,8 @@ router.post('/post/comment', verifyToken, createComment)
 
 // Get comments
 router.get('/getComment/:postId', getComments)
+
+// Like comment
+router.put('/comment/likeComment/:commentId', verifyToken, likeComment)
 
 export default router;

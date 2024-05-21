@@ -1,7 +1,7 @@
 import { Alert, Button, Textarea } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Comment from './Comment'
 
 function CommentSection({ postId }) {
@@ -10,6 +10,7 @@ function CommentSection({ postId }) {
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState([])
   const [commentError, setCommentError] = useState(null)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +34,6 @@ function CommentSection({ postId }) {
     }
   }
 
-
   useEffect(() => {
     const getComments = async () => {
       try {
@@ -48,6 +48,30 @@ function CommentSection({ postId }) {
     }
     getComments()
   }, [postId])
+
+  const handleLike = async (commentId) => {
+    try {
+      if(!currentUser){
+        navigate('/register');
+        return
+      }
+      const result = await fetch(`/qserver/comment/likeComment/${commentId}`, {
+        method: 'PUT',
+      });
+      if(result.ok){
+        const resultData = await result.json();
+        setComments(comments.map((comment) =>
+          comment._id === commentId? {
+            ...comment,
+            likes: resultData.likes,
+            numberOfLikes: resultData.likes.length,
+          } : comment
+        ))
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   return (
     <div className='max-w-2xl mx-auto w-full p-3'>
@@ -104,7 +128,7 @@ function CommentSection({ postId }) {
 
             {
               comments.map((comment) => (
-                <Comment key={comment._id} comment={comment} />
+                <Comment key={comment._id} comment={comment} onLike={handleLike} />
               ))
             }
           </>
