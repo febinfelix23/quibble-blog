@@ -51,22 +51,40 @@ function CommentSection({ postId }) {
 
   const handleLike = async (commentId) => {
     try {
-      if(!currentUser){
+      if (!currentUser) {
         navigate('/register');
         return
       }
       const result = await fetch(`/qserver/comment/likeComment/${commentId}`, {
         method: 'PUT',
       });
-      if(result.ok){
+      if (result.ok) {
         const resultData = await result.json();
         setComments(comments.map((comment) =>
-          comment._id === commentId? {
+          comment._id === commentId ? {
             ...comment,
             likes: resultData.likes,
             numberOfLikes: resultData.likes.length,
           } : comment
         ))
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  const handleDelete = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/register");
+        return;
+      }
+      const result = await fetch(`/qserver/comment/deleteComment/${commentId}`, {
+        method: 'DELETE'
+      })
+      if (result.ok) {
+        const resultData = await result.json();
+        setComments(comments.filter((comment) => comment._id !== commentId))
       }
     } catch (error) {
       console.log(error.message);
@@ -128,7 +146,7 @@ function CommentSection({ postId }) {
 
             {
               comments.map((comment) => (
-                <Comment key={comment._id} comment={comment} onLike={handleLike} />
+                <Comment key={comment._id} comment={comment} onLike={handleLike} onDelete={handleDelete} />
               ))
             }
           </>
