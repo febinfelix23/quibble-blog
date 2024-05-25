@@ -12,7 +12,6 @@ function PostPage() {
     const [post, setPost] = useState(null)
     const [recentPosts, setRecentPosts] = useState(null)
 
-
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -40,7 +39,7 @@ function PostPage() {
     useEffect(() => {
         try {
             const fetchRecentPosts = async ()=>{
-                const result = await fetch('/qserver/post/getposts?limit=3')
+                const result = await fetch(`/qserver/post/getposts?limit=4`)
                 const resultData = await result.json()
                 if(result.ok){
                     setRecentPosts(resultData.posts)

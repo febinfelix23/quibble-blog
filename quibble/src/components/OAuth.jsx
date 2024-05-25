@@ -27,8 +27,7 @@ function OAuth() {
                 }),
             })
             const resultData = await result.json()
-            console.log(resultData);
-            if (result.status === 200) {
+            if (result.ok) {
                 dispatch(signInSuccess(resultData))
                 navigate('/')
             }

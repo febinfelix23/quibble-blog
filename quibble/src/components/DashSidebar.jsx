@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Sidebar } from 'flowbite-react'
-import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
+import { HiArrowSmRight, HiChartPie, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom'
 import { logoutSuccess } from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -43,7 +43,7 @@ function DashSidebar() {
             <Sidebar.Items>
                 <Sidebar.ItemGroup className='flex flex-col gap-1'>
                     <Link to={'/dashboard?tab=profile'}>
-                        <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={currentUser.isAdmin? 'Admin' : 'User'} labelColor='dark' className='cursor-pointer' as={'div'}>
+                        <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={currentUser.isAdmin ? 'Admin' : 'User'} labelColor='dark' className='cursor-pointer' as={'div'}>
                             Profile
                         </Sidebar.Item>
                     </Link>
@@ -60,6 +60,14 @@ function DashSidebar() {
                         <Link to={'/dashboard?tab=users'}>
                             <Sidebar.Item active={tab === 'users'} icon={HiOutlineUserGroup} className='cursor-pointer' as={'div'}>
                                 Users
+                            </Sidebar.Item>
+                        </Link>
+                    )}
+
+                    {currentUser.isAdmin && (
+                        <Link to={'/dashboard?tab=overview'}>
+                            <Sidebar.Item active={tab === 'overview'} icon={HiChartPie} className='cursor-pointer' as={'div'}>
+                                Overview
                             </Sidebar.Item>
                         </Link>
                     )}
