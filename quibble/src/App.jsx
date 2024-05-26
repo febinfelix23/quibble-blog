@@ -12,6 +12,7 @@ import CreatePosts from "./pages/CreatePosts"
 import AdminPrivateRoute from "./components/AdminPrivateRoute"
 import UpdatePost from "./pages/UpdatePost"
 import PostPage from "./pages/PostPage"
+import Search from "./components/Search"
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
       </Routes>
       <FooterComp />
