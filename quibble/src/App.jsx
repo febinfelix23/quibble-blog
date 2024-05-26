@@ -1,7 +1,6 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import About from "./pages/About"
-import Projects from "./pages/Projects"
 import Dashboard from "./pages/Dashboard"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
@@ -21,7 +20,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/projects" element={<Projects />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
@@ -33,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/search" element={<Search />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
+        <Route path='/*' element={<Navigate to={'/'} />} />
       </Routes>
       <FooterComp />
     </>
