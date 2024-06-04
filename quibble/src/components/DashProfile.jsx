@@ -13,7 +13,6 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
-  logoutSuccess
 } from '../redux/user/userSlice'
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -121,23 +120,6 @@ function DashProfile() {
     }
   }
 
-  // Logout function and API
-  const handleLogout = async () => {
-    try {
-      const result = await fetch('/qserver/user/logout', {
-        method: 'POST',
-      })
-      const resultData = await result.json()
-      if (result.status === 200) {
-        dispatch(logoutSuccess())
-      } else {
-        console.log(resultData.message);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
   // Delete user function and API
   const handleDeleteUser = async () => {
     try {
@@ -219,9 +201,8 @@ function DashProfile() {
         }
       </form>
 
-      <div className="flex justify-between text-red-500 mt-5">
+      <div className="flex justify-center text-red-500 mt-5">
         <span className='cursor-pointer' onClick={() => setOpenModal(true)}>Delete account</span>
-        <span className='cursor-pointer' onClick={() => setOpenModal(true)}>Logout</span>
       </div>
 
       {
@@ -256,26 +237,6 @@ function DashProfile() {
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeleteUser}>
-                {"Yes, I'm sure"}
-              </Button>
-              <Button color="gray" onClick={() => setOpenModal(false)}>
-                No, cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
-
-      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
-        <Modal.Header />
-        <Modal.Body className='dark:bg-gray-400'>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to logout from this account?
-            </h3>
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleLogout}>
                 {"Yes, I'm sure"}
               </Button>
               <Button color="gray" onClick={() => setOpenModal(false)}>
