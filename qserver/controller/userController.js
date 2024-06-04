@@ -65,7 +65,6 @@ export const googleReg = async (req, res, next) => {
     try {
         const validUser = await User.findOne({ email })
         if (validUser) {
-            console.log('inside if');
             const token = jwt.sign({ userId: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET)
             const { password: pass, ...rest } = validUser._doc
             res.status(200).cookie('auth_token', token, { httpOnly: true }).json(rest)
