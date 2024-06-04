@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Sidebar } from 'flowbite-react'
-import { HiArrowSmRight, HiChartPie, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
+import { Button, Modal, Sidebar } from 'flowbite-react'
+import { HiArrowSmRight, HiChartPie, HiDocumentText, HiOutlineExclamationCircle, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom'
 import { logoutSuccess } from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,6 +11,7 @@ function DashSidebar() {
     const location = useLocation()
     const [tab, setTab] = useState('')
     const dispatch = useDispatch()
+    const [openModal, setOpenModal] = useState(false);
 
     // Logout function and API
     const handleLogout = async () => {
@@ -72,11 +73,31 @@ function DashSidebar() {
                         </Link>
                     )}
 
-                    <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer' as={'div'} onClick={handleLogout}>
+                    <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer' as={'div'} onClick={() => setOpenModal(true)}>
                         Logout
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
+
+            <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+                <Modal.Header />
+                <Modal.Body className='dark:bg-gray-400'>
+                    <div className="text-center">
+                        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            Are you sure you want to logout from this account?
+                        </h3>
+                        <div className="flex justify-center gap-4">
+                            <Button color="failure" onClick={handleLogout}>
+                                {"Yes, I'm sure"}
+                            </Button>
+                            <Button color="gray" onClick={() => setOpenModal(false)}>
+                                No, cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </Sidebar>
     )
 }

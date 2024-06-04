@@ -48,16 +48,16 @@ function DashPosts() {
   }
 
   // Delete post function and API
-  const handleDeletePost = async()=>{
+  const handleDeletePost = async () => {
     setOpenModal(false);
     try {
       const result = await fetch(`/qserver/post/delete/${postIdToDelete}/${currentUser._id}`, {
         method: 'DELETE',
       })
       const resultData = await result.json()
-      if(result.ok){
-        setUserPosts((prev)=> prev.filter((post)=>post._id !== postIdToDelete));
-      }else{
+      if (result.ok) {
+        setUserPosts((prev) => prev.filter((post) => post._id !== postIdToDelete));
+      } else {
         console.log(resultData.message);
       }
     } catch (error) {
@@ -97,7 +97,7 @@ function DashPosts() {
                     <Table.Cell><Link className='font-semibold text-gray-900 dark:text-white' to={`/post/${posts.slug}`}>{posts.title}</Link></Table.Cell>
                     <Table.Cell>{posts.category}</Table.Cell>
                     <Table.Cell>
-                      <span className='font-medium text-red-500 hover:underline cursor-pointer' onClick={() => {setOpenModal(true); setPostIdToDelete(posts._id)}}> Delete</span>
+                      <span className='font-medium text-red-500 hover:underline cursor-pointer' onClick={() => { setOpenModal(true); setPostIdToDelete(posts._id) }}> Delete</span>
                     </Table.Cell>
                     <Table.Cell>
                       <Link className='text-teal-500' to={`/update-post/${posts._id}`}>

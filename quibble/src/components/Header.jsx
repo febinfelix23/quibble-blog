@@ -1,4 +1,4 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
+import { Avatar, Button, Dropdown, Modal, Navbar, TextInput } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AiOutlineSearch } from 'react-icons/ai'
@@ -6,6 +6,7 @@ import { FaMoon, FaSun } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../redux/theme/themeSlice'
 import { logoutSuccess } from '../redux/user/userSlice'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 function Header() {
 
@@ -16,6 +17,7 @@ function Header() {
   const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
 
   // Search Function
   useEffect(() => {
@@ -44,6 +46,7 @@ function Header() {
       const resultData = await result.json()
       if (result.status === 200) {
         dispatch(logoutSuccess())
+        setOpenModal(false)
       } else {
         console.log(resultData.message);
       }
@@ -89,7 +92,7 @@ function Header() {
                 <Dropdown.Item className='font-semibold'>Profile</Dropdown.Item>
               </Link>
               <Dropdown.Divider />
-              <Dropdown.Item className='font-semibold' onClick={handleLogout}>Logout</Dropdown.Item>
+              <Dropdown.Item className='font-semibold' onClick={() => setOpenModal(true)}>Logout</Dropdown.Item>
             </Dropdown>
           ) : (
             <Link to='/login'>
@@ -115,6 +118,26 @@ function Header() {
           </Link>
         </Navbar.Link>
       </Navbar.Collapse>
+
+      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+        <Modal.Header />
+        <Modal.Body className='dark:bg-gray-400'>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to logout from this account?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleLogout}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button color="gray" onClick={() => setOpenModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </Navbar>
   )
 }
