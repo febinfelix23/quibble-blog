@@ -78,6 +78,7 @@ export const likeComment = async (req, res, next) => {
             return next(errorHandler(404, 'Comment not found!'))
         }
         const userIndex = comment.likes.indexOf(req.user.userId);
+        // -1 is used because array starts from 0
         if (userIndex === -1) {
             comment.numberOfLikes += 1;
             comment.likes.push(req.user.userId);
